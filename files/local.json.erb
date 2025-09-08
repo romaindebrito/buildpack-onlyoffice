@@ -2,83 +2,17 @@
 	"log": {
 		"filePath": "/app/config/log4js/production.json"
 	},
-	"aiSettings": {
-		"pluginDir": "/app/server/info/ai"
-	},
-	"runtimeConfig": {
-		"filePath": "/var/www/onlyoffice/Data/runtime.json"
-	},
 	"storage": {
 		"fs": {
 			"folderPath": "/app/cache"
 		}
 	},
-	"wopi": {
-		"htmlTemplate": "/app/web-apps/apps/api/wopi"
+    "wopi": {
+        "enable": false
 	},
 	"rabbitmq": {
-		"url": "<%= ENV['OO_DS_RABBITMQ_URL'] %>",
-		"socketOptions": {},
-		"exchangepubsub": {
-			"name": "ds.pubsub",
-			"options": {
-				"durable": true
-			}
-		},
-		"queuepubsub": {
-			"name": "",
-			"options": {
-				"autoDelete": true,
-				"exclusive": true,
-				"arguments": {
-					"x-queue-type": "classic"
-				}
-			}
-		},
-		"queueconverttask": {
-			"name": "ds.converttask6",
-			"options": {
-				"durable": true,
-				"maxPriority": 6,
-				"arguments": {
-					"x-queue-type": "classic"
-				}
-			}
-		},
-		"queueconvertresponse": {
-			"name": "ds.convertresponse",
-			"options": {
-				"durable": true,
-				"arguments": {
-					"x-queue-type": "classic"
-				}
-			}
-		},
-		"exchangeconvertdead": {
-			"name": "ds.exchangeconvertdead",
-			"options": {
-				"durable": true
-			}
-		},
-		"queueconvertdead": {
-			"name": "ds.convertdead",
-			"options": {
-				"durable": true,
-				"arguments": {
-					"x-queue-type": "classic"
-				}
-			}
-		},
-		"queuedelayed": {
-			"name": "ds.delayed",
-			"options": {
-				"durable": true,
-				"arguments": {
-					"x-queue-type": "classic"
-				}
-			}
-		}
-	},
+		"url": "<%= ENV['OO_DS_RABBITMQ_URL'] %>"
+    },
 	"services": {
 		"CoAuthoring": {
 			"server": {
@@ -114,18 +48,6 @@
 				"tokenRequiredParams": true,
 				"forceSaveUsingButtonWithoutChanges": false
 			},
-			"requestDefaults": {
-				"headers": {
-					"User-Agent": "Node.js/6.13",
-					"Connection": "Keep-Alive"
-				},
-				"rejectUnauthorized": true
-			},
-			"autoAssembly": {
-				"enable": false,
-				"interval": "5m",
-				"step": "1m"
-			},
 			"static_content": {
 				"/fonts": {
 					"path": "/app/fonts",
@@ -156,23 +78,14 @@
 					"options": {"maxAge": "7d"}
 				}
 			},
-			"utils": {
-				"utils_common_fontdir": "null",
-				"utils_fonts_search_patterns": "*.ttf;*.ttc;*.otf",
-				"limits_image_types_upload": "jpg;jpeg;jpe;png;gif;bmp;svg;tiff;tif"
-			},
 			"sql": {
 				"type": "<%= ENV['OO_DS_SERVICES_COAUTHORING_SQL_TYPE'] %>",
-				"tableChanges": "doc_changes",
-				"tableResult": "task_result",
 				"dbHost": "<%= ENV['OO_DS_SERVICES_COAUTHORING_SQL_DBHOST'] %>",
 				"dbPort": <%= ENV['OO_DS_SERVICES_COAUTHORING_SQL_DBPORT'] %>,
 				"dbName": "<%= ENV['OO_DS_SERVICES_COAUTHORING_SQL_DBNAME'] %>",
 				"dbUser": "<%= ENV['OO_DS_SERVICES_COAUTHORING_SQL_DBUSER'] %>",
 				"dbPass": "<%= ENV['OO_DS_SERVICES_COAUTHORING_SQL_DBPASS'] %>",
-				"charset": "utf8",
 				"connectionlimit": 10,
-				"max_allowed_packet": 1048575,
 				"pgPoolExtraOptions": {
 					"idleTimeoutMillis": 30000,
 					"maxLifetimeSeconds ": 60000,
@@ -185,25 +98,23 @@
 				}
 			},
 			"redis": {
-				"name": "redis",
-				"prefix": "ds:",
 				"host": "<%= ENV['OO_DS_SERVICES_COAUTHORING_REDIS_HOST'] %>",
-				"port": <%= ENV['OO_DS_SERVICES_COAUTHORING_REDIS_PORT'] %>,
-				"options": {},
-				"optionsCluster": {},
-				"iooptions": {
-					"lazyConnect": true
-				},
-				"iooptionsClusterNodes": [],
-				"iooptionsClusterOptions": {
-					"lazyConnect": true
-				}
+				"port": <%= ENV['OO_DS_SERVICES_COAUTHORING_REDIS_PORT'] %>
 			},
 			"utils": {
 				"utils_common_fontdir": "/app/fonts"
 			},
 			"sockjs": {
 				"sockjs_url": "/web-apps/vendor/sockjs/sockjs.min.js"
+			},
+			"token": {
+				"enable": {
+					"request": {
+						"browser": false,
+						"inbox": false,
+						"outbox": false
+					}
+				}
 			}
 		}
 	},

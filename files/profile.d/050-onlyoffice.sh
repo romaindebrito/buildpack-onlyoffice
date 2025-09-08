@@ -51,9 +51,9 @@ export OO_DS_SERVICES_COAUTHORING_SQL_DBNAME
 
 ## Create configuration file overriding defaults:
 
-custom_config_template="${HOME}/config/production.json.erb"
+custom_config_template="${HOME}/config/local.json.erb"
 
-if ! erb "${custom_config_template}" > "${HOME}/config/production.json" \
+if ! erb "${custom_config_template}" > "${HOME}/config/local.json" \
 		2>/dev/null
 then
 	echo "Unable to generate custom configuration file. Aborting" >&2

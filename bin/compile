@@ -110,7 +110,7 @@ then
 	exit 41
 fi
 
-if ! cp "${buildpack_dir}/files/production.json.erb" "${config_dir}/" \
+if ! cp "${buildpack_dir}/files/local.json.erb" "${config_dir}/" \
 		2>/dev/null
 then
 	cmn::task::fail "Unable to copy custom configuration template, aborting."
