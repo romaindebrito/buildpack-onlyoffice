@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+export OO_DS_RABBITMQ_URL="${OO_DS_RABBITMQ_URL:-""}"
+
+
+## Parse databases URL:
+
+REDIS_HOST="$( echo "${SCALINGO_REDIS_URL}" \
+	| cut -d "@" -f2 | cut -d ":" -f1 )"
+
+REDIS_PORT="$( echo "${SCALINGO_REDIS_URL}" \
+	| cut -d ":" -f4 | cut -d "/" -f1 )"
+
+OO_DS_SERVICES_COAUTHORING_REDIS_HOST="${OO_DS_SERVICES_COAUTHORING_REDIS_HOST:-"${REDIS_HOST:-""}"}"
+OO_DS_SERVICES_COAUTHORING_REDIS_PORT="${OO_DS_SERVICES_COAUTHORING_REDIS_PORT:-"${REDIS_PORT:-""}"}"
+
+export OO_DS_SERVICES_COAUTHORING_REDIS_HOST
+export OO_DS_SERVICES_COAUTHORING_REDIS_PORT
+
+
+OO_DS_SERVICES_COAUTHORING_SQL_DBTYPE="postgresql"
+
+POSTGRESQL_HOST="$( echo "${SCALINGO_POSTGRESQL_URL}" \
+	| cut -d "@" -f2 | cut -d ":" -f1 )"
+
+POSTGRESQL_USER="$( echo "${SCALINGO_POSTGRESQL_URL}" \
+	| cut -d "/" -f3 | cut -d ":" -f1 )"
+
+POSTGRESQL_PORT="$( echo "${SCALINGO_POSTGRESQL_URL}" \
+	| cut -d ":" -f4 | cut -d "/" -f1 )"
+
+POSTGRESQL_PASS="$( echo "${SCALINGO_POSTGRESQL_URL}" \
+	| cut -d "@" -f1 | cut -d ":" -f3 )"
+
+POSTGRESQL_DBNAME="$( echo "${SCALINGO_POSTGRESQL_URL}" \
+	| cut -d "?" -f1 | cut -d "/" -f4 )"
+
+OO_DS_SERVICES_COAUTHORING_SQL_DBHOST="${OO_DS_SERVICES_COAUTHORING_SQL_DBHOST:-"${POSTGRESQL_HOST:-""}"}"
+OO_DS_SERVICES_COAUTHORING_SQL_DBPORT="${OO_DS_SERVICES_COAUTHORING_SQL_DBPORT:-"${POSTGRESQL_PORT:-""}"}"
+OO_DS_SERVICES_COAUTHORING_SQL_DBUSER="${OO_DS_SERVICES_COAUTHORING_SQL_DBUSER:-"${POSTGRESQL_USER:-""}"}"
+OO_DS_SERVICES_COAUTHORING_SQL_DBPASS="${OO_DS_SERVICES_COAUTHORING_SQL_DBPASS:-"${POSTGRESQL_PASS:-""}"}"
+OO_DS_SERVICES_COAUTHORING_SQL_DBNAME="${OO_DS_SERVICES_COAUTHORING_SQL_DBNAME:-"${POSTGRESQL_DBNAME:-""}"}"
+
+export OO_DS_SERVICES_COAUTHORING_SQL_DBTYPE
+export OO_DS_SERVICES_COAUTHORING_SQL_DBHOST
+export OO_DS_SERVICES_COAUTHORING_SQL_DBPORT
+export OO_DS_SERVICES_COAUTHORING_SQL_DBUSER
+export OO_DS_SERVICES_COAUTHORING_SQL_DBPASS
+export OO_DS_SERVICES_COAUTHORING_SQL_DBNAME
+
+
+## Create configuration file overriding defaults:
+
+custom_config_template="${HOME}/config/production.json.erb"
+
+if ! erb "${custom_config_template}" > "${HOME}/config/production.json" \
+		2>/dev/null
+then
+	echo "Unable to generate custom configuration file. Aborting" >&2
+	exit 2
+fi
+

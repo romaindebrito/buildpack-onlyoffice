@@ -1,0 +1,136 @@
+#!/usr/bin/env bash
+
+export DEBUG="yes"
+
+# shellcheck disable=SC1091
+source "$( cd -P "$( dirname "${0}" )" && pwd )/../cmnlib.sh"
+
+cmn::main::start "${0}" "${1}" "${2}" "${3}"
+
+# -----------------------------------------------------------------------------
+
+# shellcheck disable=SC1091
+source "${buildpack_dir}/versions.sh"
+version="${ONLYOFFICE_DOCUMENTSERVER_VERSION:-"${ONLYOFFICE_DOCUMENTSERVER_DEFAULT_VERSION}"}"
+
+release_url="https://api.github.com/repos/onlyoffice/DocumentServer/releases/tags/v${version}"
+archive="${cache_dir}/onlyoffice-documentserver-${version}.deb"
+checksum_file="${archive}.sha256"
+onlyoffice_dir="${tmp_dir}/onlyoffice-${version}"
+
+src="${onlyoffice_dir}/var/www/onlyoffice/documentserver"
+
+#TODO: provide our own default file in files?
+default_config_file="${onlyoffice_dir}/etc/onlyoffice/documentserver/default.json"
+custom_config_file="${build_dir}/production.json"
+
+config_dir="${build_dir}/config"
+
+# -----------------------------------------------------------------------------
+
+cmn::step::start "Installing prerequisites"
+
+tag_info="$( curl --location --silent --fail "${release_url}" \
+				| jq -r '.assets[]
+				| select(.name == "onlyoffice-documentserver_amd64.deb")' )"
+
+mkdir --parents "${onlyoffice_dir}"
+mkdir --parents "${config_dir}/log4js"
+mkdir --parents "${build_dir}/.profile.d"
+
+cmn::step::finish
+
+# -----------------------------------------------------------------------------
+
+cmn::step::start "Installing OnlyOffice DocumentServer ${version}"
+
+download_url="$( jq --raw-output --null-input \
+					--argjson data "${tag_info}" '$data.browser_download_url' )"
+
+digest="$( jq --raw-output --null-input \
+				--argjson data "${tag_info}" '$data.digest' \
+					| cut -d':' -f2 )"
+
+
+echo "${digest}" > "${checksum_file}"
+
+#TODO: cache
+
+cmn::task::start "Downloading archive"
+if ! cmn::file::download "${download_url}" "${archive}"; then
+	cmn::task::fail "Unable to download archive file, aborting."
+	cmn::step::fail
+	exit 10
+fi
+cmn::task::finish
+
+cmn::task::start "Checking archive validity"
+if ! cmn::file::check_checksum "${archive}" "${checksum_file}"; then
+	cmn::task::fail
+	cmn::output::err <<- EOM
+		Checksums do not match!
+		'${archive}' has been deleted, since it's most likely corrupt.
+		Aborting.
+	EOM
+	exit 11
+fi
+cmn::task::finish
+
+cmn::task::start "Extracting"
+if ! dpkg-deb --extract "${archive}" "${onlyoffice_dir}" 2>/dev/null; then
+	cmn::task::fail "Unable to unpack the archive, aborting."
+	cmn::step::fail
+	exit 20
+fi
+cmn::task::finish
+
+cmn::task::start "Installing"
+if ! mv "${src}"/* "${build_dir}" 2>/dev/null; then
+	cmn::task::fail "Unable to move required files, aborting."
+	cmn::step::fail
+	exit 31
+fi
+
+if ! cp "${default_config_file}" "${build_dir}/config/" 2>/dev/null; then
+	cmn::task::fail "Unable to copy default configuration file, aborting."
+	cmn::step::fail
+	exit 32
+fi
+cmn::task::finish
+
+cmn::task::start "Configuring"
+
+if ! cp "${onlyoffice_dir}/etc/onlyoffice/documentserver/log4js/production.json" \
+		"${config_dir}/log4js/" \
+		2>/dev/null
+then
+	cmn::output::debug "${onlyoffice_dir}/etc/onlyoffice/documentserver/production.json"
+	cmn::task::fail "Unable to copy log4js configuration file, aborting."
+	cmn::step::fail
+	exit 41
+fi
+
+if ! cp "${buildpack_dir}/files/production.json.erb" "${config_dir}/" \
+		2>/dev/null
+then
+	cmn::task::fail "Unable to copy custom configuration template, aborting."
+	cmn::step::fail
+	exit 42
+fi
+cmn::task::finish
+
+cmn::step::finish
+
+
+if ! cp "${buildpack_dir}/files/profile.d/050-onlyoffice.sh" \
+		"${build_dir}/.profile.d/" \
+		2>/dev/null
+then
+	cmn::task::fail "Unable to copy start script, aborting."
+	cmn::step::fail
+	exit 51
+fi
+
+# -----------------------------------------------------------------------------
+
+cmn::main::finish

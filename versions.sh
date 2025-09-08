@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+ONLYOFFICE_DOCUMENTSERVER_DEFAULT_VERSION="9.0.4"

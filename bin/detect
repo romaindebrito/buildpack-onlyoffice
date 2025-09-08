@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+echo "OnlyOffice Document Server"
+exit 0

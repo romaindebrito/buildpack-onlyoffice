@@ -1,0 +1,228 @@
+{
+	"log": {
+		"filePath": "/app/config/log4js/production.json"
+	},
+	"aiSettings": {
+		"pluginDir": "/app/server/info/ai"
+	},
+	"runtimeConfig": {
+		"filePath": "/var/www/onlyoffice/Data/runtime.json"
+	},
+	"storage": {
+		"fs": {
+			"folderPath": "/app/cache"
+		}
+	},
+	"wopi": {
+		"htmlTemplate": "/app/web-apps/apps/api/wopi"
+	},
+	"rabbitmq": {
+		"url": "<%= ENV['OO_DS_RABBITMQ_URL'] %>",
+		"socketOptions": {},
+		"exchangepubsub": {
+			"name": "ds.pubsub",
+			"options": {
+				"durable": true
+			}
+		},
+		"queuepubsub": {
+			"name": "",
+			"options": {
+				"autoDelete": true,
+				"exclusive": true,
+				"arguments": {
+					"x-queue-type": "classic"
+				}
+			}
+		},
+		"queueconverttask": {
+			"name": "ds.converttask6",
+			"options": {
+				"durable": true,
+				"maxPriority": 6,
+				"arguments": {
+					"x-queue-type": "classic"
+				}
+			}
+		},
+		"queueconvertresponse": {
+			"name": "ds.convertresponse",
+			"options": {
+				"durable": true,
+				"arguments": {
+					"x-queue-type": "classic"
+				}
+			}
+		},
+		"exchangeconvertdead": {
+			"name": "ds.exchangeconvertdead",
+			"options": {
+				"durable": true
+			}
+		},
+		"queueconvertdead": {
+			"name": "ds.convertdead",
+			"options": {
+				"durable": true,
+				"arguments": {
+					"x-queue-type": "classic"
+				}
+			}
+		},
+		"queuedelayed": {
+			"name": "ds.delayed",
+			"options": {
+				"durable": true,
+				"arguments": {
+					"x-queue-type": "classic"
+				}
+			}
+		}
+	},
+	"services": {
+		"CoAuthoring": {
+			"server": {
+				"port": 8000,
+				"workerpercpu": 1,
+				"mode": "development",
+				"limits_tempfile_upload": 104857600,
+				"limits_image_size": 26214400,
+				"limits_image_download_timeout": {
+					"connectionAndInactivity": "2m",
+					"wholeCycle": "2m"
+				},
+				"callbackRequestTimeout": {
+					"connectionAndInactivity": "10m",
+					"wholeCycle": "10m"
+				},
+				"healthcheckfilepath": "../public/healthcheck.docx",
+				"savetimeoutdelay": 5000,
+				"edit_singleton": false,
+				"forgottenfiles": "forgotten",
+				"forgottenfilesname": "output",
+				"maxRequestChanges": 20000,
+				"openProtectedFile": true,
+				"isAnonymousSupport": true,
+				"editorDataStorage": "editorDataMemory",
+				"editorStatStorage": "",
+				"assemblyFormatAsOrigin": true,
+				"newFileTemplate": "../../document-templates/new",
+				"downloadFileAllowExt": [
+					"pdf",
+					"xlsx"
+				],
+				"tokenRequiredParams": true,
+				"forceSaveUsingButtonWithoutChanges": false
+			},
+			"requestDefaults": {
+				"headers": {
+					"User-Agent": "Node.js/6.13",
+					"Connection": "Keep-Alive"
+				},
+				"rejectUnauthorized": true
+			},
+			"autoAssembly": {
+				"enable": false,
+				"interval": "5m",
+				"step": "1m"
+			},
+			"static_content": {
+				"/fonts": {
+					"path": "/app/fonts",
+					"options": {"maxAge": "7d"}
+				},
+				"/sdkjs": {
+					"path": "/app/sdkjs",
+					"options": {"maxAge": "7d"}
+				},
+				"/web-apps": {
+					"path": "/app/web-apps",
+					"options": {"maxAge": "7d"}
+				},
+				"/welcome": {
+					"path": "/app/server/welcome",
+					"options": {"maxAge": "7d"}
+				},
+				"/info": {
+					"path": "/app/server/info",
+					"options": {"maxAge": "7d"}
+				},
+				"/sdkjs-plugins": {
+					"path": "/app/sdkjs-plugins",
+					"options": {"maxAge": "7d"}
+				},
+				"/dictionaries": {
+					"path": "/app/dictionaries",
+					"options": {"maxAge": "7d"}
+				}
+			},
+			"utils": {
+				"utils_common_fontdir": "null",
+				"utils_fonts_search_patterns": "*.ttf;*.ttc;*.otf",
+				"limits_image_types_upload": "jpg;jpeg;jpe;png;gif;bmp;svg;tiff;tif"
+			},
+			"sql": {
+				"type": "<%= ENV['OO_DS_SERVICES_COAUTHORING_SQL_TYPE'] %>",
+				"tableChanges": "doc_changes",
+				"tableResult": "task_result",
+				"dbHost": "<%= ENV['OO_DS_SERVICES_COAUTHORING_SQL_DBHOST'] %>",
+				"dbPort": <%= ENV['OO_DS_SERVICES_COAUTHORING_SQL_DBPORT'] %>,
+				"dbName": "<%= ENV['OO_DS_SERVICES_COAUTHORING_SQL_DBNAME'] %>",
+				"dbUser": "<%= ENV['OO_DS_SERVICES_COAUTHORING_SQL_DBUSER'] %>",
+				"dbPass": "<%= ENV['OO_DS_SERVICES_COAUTHORING_SQL_DBPASS'] %>",
+				"charset": "utf8",
+				"connectionlimit": 10,
+				"max_allowed_packet": 1048575,
+				"pgPoolExtraOptions": {
+					"idleTimeoutMillis": 30000,
+					"maxLifetimeSeconds ": 60000,
+					"statement_timeout ": 60000,
+					"query_timeout  ": 60000,
+					"connectionTimeoutMillis": 60000,
+					"ssl": {
+						"rejectUnauthorized": false
+					}
+				}
+			},
+			"redis": {
+				"name": "redis",
+				"prefix": "ds:",
+				"host": "<%= ENV['OO_DS_SERVICES_COAUTHORING_REDIS_HOST'] %>",
+				"port": <%= ENV['OO_DS_SERVICES_COAUTHORING_REDIS_PORT'] %>,
+				"options": {},
+				"optionsCluster": {},
+				"iooptions": {
+					"lazyConnect": true
+				},
+				"iooptionsClusterNodes": [],
+				"iooptionsClusterOptions": {
+					"lazyConnect": true
+				}
+			},
+			"utils": {
+				"utils_common_fontdir": "/app/fonts"
+			},
+			"sockjs": {
+				"sockjs_url": "/web-apps/vendor/sockjs/sockjs.min.js"
+			}
+		}
+	},
+	"license": {
+		"license_file": "/var/www/onlyoffice/Data/license.lic",
+		"warning_limit_percents": 70,
+		"packageType": 0
+	},
+	"FileConverter": {
+		"converter": {
+			"fontDir": "/app/fonts",
+			"presentationThemesDir": "/app/sdkjs/slide/themes",
+			"x2tPath": "/app/server/FileConverter/bin/x2t",
+			"docbuilderPath": "/app/server/FileConverter/bin/docbuilder"
+		}
+	},
+	"SpellChecker": {
+		"server": {
+			"dictDir": "/app/dictionaries"
+		}
+	}
+}
