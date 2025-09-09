@@ -52,25 +52,36 @@ digest="$( jq --raw-output --null-input \
 					| cut -d':' -f2 )"
 
 
-echo "${digest}" > "${checksum_file}"
+if [ ! -f "${archive}" ]; then
 
-#TODO: cache
+	# Remove .deb and .deb.sha256 files from cache, since they are probably for
+	# another version:
+	cmn::task::start "Cleaning cache"
+	rm --recursive --force "${cache_dir}"/*.deb
+	rm --recursive --force "${cache_dir}"/*.sha256
+	cmn::task::finish
 
-cmn::task::start "Downloading archive"
-if ! cmn::file::download "${download_url}" "${archive}"; then
-	cmn::task::fail "Unable to download archive file, aborting."
-	cmn::step::fail
-	exit 10
+	# Download appropriate version:
+	cmn::task::start "Downloading archive"
+	if ! cmn::file::download "${download_url}" "${archive}"; then
+		cmn::task::fail "Unable to download archive file, aborting."
+		cmn::step::fail
+		exit 10
+	fi
+	cmn::task::finish
+else
+	cmn::output::info "Found file in cache."
 fi
-cmn::task::finish
 
 cmn::task::start "Checking archive validity"
+echo "${digest}" > "${checksum_file}"
+
 if ! cmn::file::check_checksum "${archive}" "${checksum_file}"; then
 	cmn::task::fail
 	cmn::output::err <<- EOM
 		Checksums do not match!
 		'${archive}' has been deleted, since it's most likely corrupt.
-		Aborting.
+		Please trigger another deployment to retry.
 	EOM
 	exit 11
 fi
