@@ -49,36 +49,36 @@
           "xlsx"
         ],
         "tokenRequiredParams": true,
-        "forceSaveUsingButtonWithoutChanges": false
-      },
-      "static_content": {
-        "/fonts": {
-          "path": "/app/fonts",
-          "options": {"maxAge": "7d"}
-        },
-        "/sdkjs": {
-          "path": "/app/sdkjs",
-          "options": {"maxAge": "7d"}
-        },
-        "/web-apps": {
-          "path": "/app/web-apps",
-          "options": {"maxAge": "7d"}
-        },
-        "/welcome": {
-          "path": "/app/server/welcome",
-          "options": {"maxAge": "7d"}
-        },
-        "/info": {
-          "path": "/app/server/info",
-          "options": {"maxAge": "7d"}
-        },
-        "/sdkjs-plugins": {
-          "path": "/app/sdkjs-plugins",
-          "options": {"maxAge": "7d"}
-        },
-        "/dictionaries": {
-          "path": "/app/dictionaries",
-          "options": {"maxAge": "7d"}
+        "forceSaveUsingButtonWithoutChanges": false,
+        "static_content": {
+          "/fonts": {
+            "path": "/app/fonts",
+            "options": {"maxAge": "7d"}
+          },
+          "/sdkjs": {
+            "path": "/app/sdkjs",
+            "options": {"maxAge": "7d"}
+          },
+          "/web-apps": {
+            "path": "/app/web-apps",
+            "options": {"maxAge": "7d"}
+          },
+          "/welcome": {
+            "path": "/app/server/welcome",
+            "options": {"maxAge": "7d"}
+          },
+          "/info": {
+            "path": "/app/server/info",
+            "options": {"maxAge": "7d"}
+          },
+          "/sdkjs-plugins": {
+            "path": "/app/sdkjs-plugins",
+            "options": {"maxAge": "7d"}
+          },
+          "/dictionaries": {
+            "path": "/app/dictionaries",
+            "options": {"maxAge": "7d"}
+          }
         }
       },
       "sql": {
@@ -112,8 +112,8 @@
       },
       "token": {
         "enable": {
+          "browser": false,
           "request": {
-            "browser": false,
             "inbox": false,
             "outbox": false
           }

@@ -59,4 +59,3 @@ then
 	echo "Unable to generate custom configuration file. Aborting" >&2
 	exit 2
 fi
-
