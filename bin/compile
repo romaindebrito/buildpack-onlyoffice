@@ -51,7 +51,6 @@ digest="$( jq --raw-output --null-input \
 				--argjson data "${tag_info}" '$data.digest' \
 					| cut -d':' -f2 )"
 
-
 if [ ! -f "${archive}" ]; then
 
 	# Remove .deb and .deb.sha256 files from cache, since they are probably for
@@ -96,8 +95,8 @@ fi
 cmn::task::finish
 
 cmn::task::start "Installing"
-if ! mv "${src}"/* "${build_dir}" 2>/dev/null; then
-	cmn::task::fail "Unable to move required files, aborting."
+if ! cp --archive "${src}"/* "${build_dir}" 2>/dev/null; then
+	cmn::task::fail "Unable to copy required files, aborting."
 	cmn::step::fail
 	exit 31
 fi
@@ -115,7 +114,6 @@ if ! cp "${onlyoffice_dir}/etc/onlyoffice/documentserver/log4js/production.json"
 		"${config_dir}/log4js/" \
 		2>/dev/null
 then
-	cmn::output::debug "${onlyoffice_dir}/etc/onlyoffice/documentserver/production.json"
 	cmn::task::fail "Unable to copy log4js configuration file, aborting."
 	cmn::step::fail
 	exit 41
@@ -132,15 +130,56 @@ cmn::task::finish
 
 cmn::step::finish
 
+# -----------------------------------------------------------------------------
+
+cmn::step::start "Copying Files"
+
+src_dir="${build_dir}/fonts"
+
+if [ -d "${src_dir}" ]; then
+	cmn::task::start "Copying Custom Fonts"
+
+	if ! cp "${src_dir}"/* "" 2>/dev/null; then
+		cmn::task::fail "Unable to copy custom fonts, aborting."
+		cmn::step::fail
+		exit 51
+	fi
+
+	rm --recursive --force "${src_dir}"
+	cmn::task::finish
+fi
+
+cmn::step::finish
+
+# -----------------------------------------------------------------------------
+
+cmn::step::start "Building Environment"
+
+cmn::task::start "Copying profile.d script"
+
+mkdir --parents "${build_dir}/.profile.d"
 
 if ! cp "${buildpack_dir}/files/profile.d/050-onlyoffice.sh" \
-		"${build_dir}/.profile.d/" \
-		2>/dev/null
+	"${build_dir}/.profile.d/" 2>/dev/null
 then
-	cmn::task::fail "Unable to copy start script, aborting."
+	cmn::task::fail
 	cmn::step::fail
 	exit 51
 fi
+
+cmn::task::finish
+
+cmn::step::finish
+
+# -----------------------------------------------------------------------------
+
+cmn::step::start "Cleaning up"
+
+cmn::task::start "Removing temporary files"
+rm --recursive --force "${tmp_dir}"
+cmn::task::finish
+
+cmn::step::finish
 
 # -----------------------------------------------------------------------------
 
