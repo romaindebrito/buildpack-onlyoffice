@@ -49,13 +49,9 @@ export OO_DS_SERVICES_COAUTHORING_SQL_DBPASS
 export OO_DS_SERVICES_COAUTHORING_SQL_DBNAME
 
 
-## Create configuration file overriding defaults:
 
-custom_config_template="${HOME}/config/local.json.erb"
+NODE_CONFIG_DIR="/app/config"
+NODE_ENV="${NODE_ENV:-"production"}"
 
-if ! erb "${custom_config_template}" > "${HOME}/config/local.json" \
-		2>/dev/null
-then
-	echo "Unable to generate custom configuration file. Aborting" >&2
-	exit 2
-fi
+export NODE_CONFIG_DIR
+export NODE_ENV
