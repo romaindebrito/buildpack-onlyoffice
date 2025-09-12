@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 start_docservice() {
-	/app/server/DocServicedocservice &
+	/app/server/DocService/docservice &
 }
 
 ensure_docservice() {
