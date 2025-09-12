@@ -212,11 +212,11 @@ cmn::step::start "Building Environment"
 # LD_LIBRARY_PATH="\${HOME}/server/FileConverter/bin"
 # 
 
-cmn::task::start "Copying profile.d script"
+cmn::task::start "Copying profile.d scripts"
 
 mkdir --parents "${build_dir}/.profile.d"
 
-if ! cp "${buildpack_dir}/files/profile.d/050-onlyoffice.sh" \
+if ! cp "${buildpack_dir}/files/profile.d"/*.sh \
 	"${build_dir}/.profile.d/" 2>/dev/null
 then
 	cmn::task::fail
