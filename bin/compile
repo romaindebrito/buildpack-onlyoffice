@@ -11,19 +11,31 @@ cmn::main::start "${0}" "${1}" "${2}" "${3}"
 
 # shellcheck disable=SC1091
 source "${buildpack_dir}/versions.sh"
+
+# Read version from environment,
+# Falls back to the default provided in the buildpack:
 version="${ONLYOFFICE_DOCUMENTSERVER_VERSION:-"${ONLYOFFICE_DOCUMENTSERVER_DEFAULT_VERSION}"}"
 
+# GitHub API URL to retrieve the release corresponding to the version:
 release_url="https://api.github.com/repos/onlyoffice/DocumentServer/releases/tags/v${version}"
+
+# Path to the .deb file stored in cache (it may or may not exist):
 archive="${cache_dir}/onlyoffice-documentserver-${version}.deb"
+
+# Path to the checksum for the .deb file:
 checksum_file="${archive}.sha256"
+
+# Temporary dir, where the .deb is extracted:
 onlyoffice_dir="${tmp_dir}/onlyoffice-${version}"
 
+# Source directory, containing the files we're interested in:
 src="${onlyoffice_dir}/var/www/onlyoffice/documentserver"
 
 #TODO: provide our own default file in files?
 default_config_file="${onlyoffice_dir}/etc/onlyoffice/documentserver/default.json"
 custom_config_file="${build_dir}/production.json"
 
+# Path to the configuration directory:
 config_dir="${build_dir}/config"
 
 # -----------------------------------------------------------------------------
@@ -32,11 +44,13 @@ cmn::step::start "Installing prerequisites"
 
 tag_info="$( curl --location --silent --fail "${release_url}" \
 				| jq -r '.assets[]
-				| select(.name == "onlyoffice-documentserver_amd64.deb")' )"
+					| select(.name == "onlyoffice-documentserver_amd64.deb")' )"
 
 mkdir --parents "${onlyoffice_dir}"
 mkdir --parents "${config_dir}/log4js"
 mkdir --parents "${build_dir}/.profile.d"
+mkdir --parents "${build_dir}/data"
+mkdir --parents "${build_dir}/fonts"
 
 cmn::step::finish
 
@@ -90,7 +104,7 @@ cmn::task::start "Extracting"
 if ! dpkg-deb --extract "${archive}" "${onlyoffice_dir}" 2>/dev/null; then
 	cmn::task::fail "Unable to unpack the archive, aborting."
 	cmn::step::fail
-	exit 20
+	exit 12
 fi
 cmn::task::finish
 
@@ -98,13 +112,13 @@ cmn::task::start "Installing"
 if ! cp --archive "${src}"/* "${build_dir}" 2>/dev/null; then
 	cmn::task::fail "Unable to copy required files, aborting."
 	cmn::step::fail
-	exit 31
+	exit 13
 fi
 
 if ! cp "${default_config_file}" "${build_dir}/config/" 2>/dev/null; then
 	cmn::task::fail "Unable to copy default configuration file, aborting."
 	cmn::step::fail
-	exit 32
+	exit 14
 fi
 cmn::task::finish
 
@@ -116,16 +130,57 @@ if ! cp "${onlyoffice_dir}/etc/onlyoffice/documentserver/log4js/production.json"
 then
 	cmn::task::fail "Unable to copy log4js configuration file, aborting."
 	cmn::step::fail
-	exit 41
+	exit 15
 fi
 
-if ! cp "${buildpack_dir}/files/local.json.erb" "${config_dir}/" \
+if ! cp "${buildpack_dir}/files/production.json.erb" "${config_dir}/" \
 		2>/dev/null
 then
 	cmn::task::fail "Unable to copy custom configuration template, aborting."
 	cmn::step::fail
-	exit 42
+	exit 16
 fi
+cmn::task::finish
+
+cmn::step::finish
+
+# -----------------------------------------------------------------------------
+
+cmn::step::start "Generating Files"
+
+LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${build_dir}/server/FileConverter/bin"
+export LD_LIBRARY_PATH
+
+cmn::task::start "Generating Fonts"
+
+if ! "${build_dir}/server/tools/allfontsgen" \
+		--input="${build_dir}/core-fonts" \
+		--allfonts-web="${build_dir}/sdkjs/common/AllFonts.js" \
+		--allfonts="${build_dir}/server/FileConverter/bin/AllFonts.js" \
+		--images="${build_dir}/sdkjs/common/Images" \
+		--selection="${build_dir}/server/FileConverter/bin/font_selection.bin" \
+		--output-web="${build_dir}/fonts" \
+		--use-system="true"
+then
+	cmn::task::fail
+	cmn::step::fail
+	exit 20
+fi
+
+cmn::task::finish
+
+cmn::task::start "Generating Themes"
+
+if ! "${build_dir}/server/tools/allthemesgen" \
+		--src="${build_dir}/sdkjs/slide/themes"\
+		--converter-dir="${build_dir}/server/FileConverter/bin"\
+		--output="${build_dir}/sdkjs/common/Images"
+then
+	cmn::task::fail
+	cmn::step::fail
+	exit 21
+fi
+
 cmn::task::finish
 
 cmn::step::finish
@@ -134,18 +189,17 @@ cmn::step::finish
 
 cmn::step::start "Copying Files"
 
-src_dir="${build_dir}/fonts"
+if [ -f "${build_dir}/license.lic" ]; then
+	cmn::task::start "Copying License File"
 
-if [ -d "${src_dir}" ]; then
-	cmn::task::start "Copying Custom Fonts"
-
-	if ! cp "${src_dir}"/* "" 2>/dev/null; then
-		cmn::task::fail "Unable to copy custom fonts, aborting."
+	if ! mv "${build_dir}/license.lic" "${build_dir}/data/license.lic" \
+		2>/dev/null
+	then
+		cmn::task::fail
 		cmn::step::fail
-		exit 51
+		exit 31
 	fi
 
-	rm --recursive --force "${src_dir}"
 	cmn::task::finish
 fi
 
@@ -154,6 +208,9 @@ cmn::step::finish
 # -----------------------------------------------------------------------------
 
 cmn::step::start "Building Environment"
+
+# LD_LIBRARY_PATH="\${HOME}/server/FileConverter/bin"
+# 
 
 cmn::task::start "Copying profile.d script"
 
@@ -164,7 +221,7 @@ if ! cp "${buildpack_dir}/files/profile.d/050-onlyoffice.sh" \
 then
 	cmn::task::fail
 	cmn::step::fail
-	exit 51
+	exit 40
 fi
 
 cmn::task::finish
