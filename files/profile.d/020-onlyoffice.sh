@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
-LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${HOME}/clamav/lib"
-export LD_LIBRARY_PATH
-
 # Whether we should start OnlyOffice services or not (defaults is yes):
-OO_START=0
+_OO_START=0
 
 # Get the process type name we're running in:
 # We must support "one-off" as a valid process type name, hence using rev:
@@ -18,9 +15,9 @@ IFS=', ' read -r -a disabled \
 # Check if we are in a process type for which we **don't** want to start OO:
 for p in "${disabled[@]}"; do
 	if [ "${p}" == "${current_process_type}" ]; then
-		OO_START=1
+		_OO_START=1
 		break
 	fi
 done
 
-export OO_START
+export _OO_START
