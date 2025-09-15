@@ -49,9 +49,11 @@ export OO_DS_SERVICES_COAUTHORING_SQL_DBPASS
 export OO_DS_SERVICES_COAUTHORING_SQL_DBNAME
 
 
-
 NODE_CONFIG_DIR="/app/config"
-NODE_ENV="${NODE_ENV:-"production"}"
-
 export NODE_CONFIG_DIR
+
+NODE_ENV="${NODE_ENV:-"production"}"
 export NODE_ENV
+
+LD_LIBRARY_PATH="/app/server/FileConverter/bin${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+export LD_LIBRARY_PATH
