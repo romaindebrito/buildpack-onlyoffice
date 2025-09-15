@@ -10,21 +10,3 @@ then
 	echo "Unable to generate custom configuration file. Aborting" >&2
 	exit 2
 fi
-
-
-## Fix fonts paths:
-
-font_files=(
-	${HOME}/server/FileConverter/bin/AllFonts.js
-	${HOME}/server/FileConverter/bin/font_selection.bin
-	${HOME}/sdkjs/common/AllFonts.js
-)
-
-for f in "${font_files[@]}"; do
-	sed -i -E 's/\/build\/[a-z0-9-]{36}/\/app/g' "${f}"
-done
-
-
-## Fix themes paths:
-
-

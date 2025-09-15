@@ -167,6 +167,20 @@ then
 	exit 20
 fi
 
+# Font paths are generated during build, so that all paths are prefixed with
+# `/build/<UUID>`.
+# At runtime, this path doesn't exist and must be replaced with `/app`:
+
+font_files=(
+	${HOME}/server/FileConverter/bin/AllFonts.js
+	${HOME}/server/FileConverter/bin/font_selection.bin
+	${HOME}/sdkjs/common/AllFonts.js
+)
+
+for f in "${font_files[@]}"; do
+	sed -i -E 's/\/build\/[a-z0-9-]{36}/\/app/g' "${f}"
+done
+
 cmn::task::finish
 
 cmn::task::start "Generating Themes"
