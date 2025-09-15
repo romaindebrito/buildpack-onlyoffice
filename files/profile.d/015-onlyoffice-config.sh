@@ -15,7 +15,7 @@ fi
 ## Fix fonts paths:
 
 font_files=(
-	${HOME}/server/FileConverter/AllFonts.js
+	${HOME}/server/FileConverter/bin/AllFonts.js
 	${HOME}/server/FileConverter/bin/font_selection.bin
 	${HOME}/sdkjs/common/AllFonts.js
 )
