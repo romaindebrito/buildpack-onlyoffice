@@ -228,9 +228,6 @@ cmn::step::finish
 
 cmn::step::start "Building Environment"
 
-# LD_LIBRARY_PATH="\${HOME}/server/FileConverter/bin"
-# 
-
 cmn::task::start "Copying profile.d scripts"
 
 mkdir --parents "${build_dir}/.profile.d"
