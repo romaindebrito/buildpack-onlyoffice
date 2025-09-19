@@ -124,8 +124,9 @@ cmn::task::finish
 
 cmn::task::start "Configuring"
 
-if ! cp "${onlyoffice_dir}/etc/onlyoffice/documentserver/log4js/production.json" \
-		"${config_dir}/log4js/" \
+#if ! cp "${onlyoffice_dir}/etc/onlyoffice/documentserver/log4js/production.json" \
+if ! cp "${onlyoffice_dir}/etc/onlyoffice/documentserver/log4js/development.json" \
+		"${config_dir}/log4js/production.json" \
 		2>/dev/null
 then
 	cmn::task::fail "Unable to copy log4js configuration file, aborting."

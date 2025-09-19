@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 start_fileconverter() {
+	echo "Starting OnlyOffice FileConverter"
 	/app/server/FileConverter/converter &
 }
 

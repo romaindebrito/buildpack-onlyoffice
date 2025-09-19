@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 start_docservice() {
+	echo "Starting OnlyOffice DocService"
 	/app/server/DocService/docservice &
 }
 
