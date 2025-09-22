@@ -49,7 +49,18 @@ tag_info="$( curl --location --silent --fail "${release_url}" \
 mkdir --parents "${onlyoffice_dir}"
 mkdir --parents "${config_dir}/log4js"
 mkdir --parents "${build_dir}/.profile.d"
+
+# storage.fs.folderPath:
+mkdir --parents "${build_dir}/cache"
+
+
+mkdir --parents "${build_dir}/app_data"
+
+license.license_file:
 mkdir --parents "${build_dir}/data"
+
+services.coAuthoring.utils.utils_common_fontdir:
+FileConverer.converter.fontDir:
 mkdir --parents "${build_dir}/fonts"
 
 cmn::step::finish
