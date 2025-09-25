@@ -24,6 +24,10 @@
         "port": 8000,
         "workerpercpu": 1,
         "mode": "development",
+        "request-filtering-agent" : {
+          "allowPrivateIPAddress": true,
+          "allowMetaIPAddress": false
+        },
         "limits_tempfile_upload": 104857600,
         "limits_image_size": 26214400,
         "limits_image_download_timeout": {
