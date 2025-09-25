@@ -53,9 +53,6 @@ mkdir --parents "${build_dir}/.profile.d"
 # storage.fs.folderPath:
 mkdir --parents "${build_dir}/cache"
 
-# ?
-mkdir --parents "${build_dir}/app_data"
-
 # license.license_file:
 mkdir --parents "${build_dir}/data"
 
