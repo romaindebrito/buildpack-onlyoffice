@@ -2,15 +2,6 @@
 
 export OO_DS_RABBITMQ_URL="${OO_DS_RABBITMQ_URL:-""}"
 
-OO_DS_AMQP_PORT="$( echo "${OO_DS_RABBITMQ_URL}" \
-	| cut -d ":" -f2 )"
-
-OO_DS_AMQP_HOST="$( echo "${OO_DS_RABBITMQ_URL}" \
-	| cut -d ":" -f1 )"
-
-export OO_DS_AMQP_HOST
-export OO_DS_AMQP_PORT
-
 ## Parse databases URL:
 
 REDIS_HOST="$( echo "${SCALINGO_REDIS_URL}" \
