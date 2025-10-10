@@ -162,19 +162,19 @@ export LD_LIBRARY_PATH
 
 cmn::task::start "Generating Fonts"
 
-if ! "${build_dir}/server/tools/allfontsgen" \
-		--input="${build_dir}/core-fonts" \
-		--allfonts-web="${build_dir}/sdkjs/common/AllFonts.js" \
-		--allfonts="${build_dir}/server/FileConverter/bin/AllFonts.js" \
-		--images="${build_dir}/sdkjs/common/Images" \
-		--selection="${build_dir}/server/FileConverter/bin/font_selection.bin" \
-		--output-web="${build_dir}/fonts" \
-		--use-system="true"
-then
-	cmn::task::fail
-	cmn::step::fail
-	exit 20
-fi
+#if ! "${build_dir}/server/tools/allfontsgen" \
+#		--input="${build_dir}/core-fonts" \
+#		--allfonts-web="${build_dir}/sdkjs/common/AllFonts.js" \
+#		--allfonts="${build_dir}/server/FileConverter/bin/AllFonts.js" \
+#		--images="${build_dir}/sdkjs/common/Images" \
+#		--selection="${build_dir}/server/FileConverter/bin/font_selection.bin" \
+#		--output-web="${build_dir}/fonts" \
+#		--use-system="true"
+#then
+#	cmn::task::fail
+#	cmn::step::fail
+#	exit 20
+#fi
 
 cmn::task::finish
 
