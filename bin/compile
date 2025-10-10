@@ -257,6 +257,10 @@ cmn::step::finish
 
 cmn::step::start "Cleaning up"
 
+cmn::task::start "Removing cache files"
+rm --recursive --force "${cache_dir}"/*.deb
+rm --recursive --force "${cache_dir}"/*.sha256
+
 cmn::task::start "Removing temporary files"
 rm --recursive --force "${tmp_dir}"
 cmn::task::finish
