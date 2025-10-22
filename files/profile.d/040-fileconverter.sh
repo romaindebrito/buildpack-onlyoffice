@@ -8,7 +8,7 @@ start_fileconverter() {
 ensure_fileconverter() {
 	while true; do
 		sleep 30s
-		if ! pgrep -f '/app/server/DocService/docservice' >/dev/null; then
+		if ! pgrep -f '/app/server/FileConverter/converter' >/dev/null; then
 			echo "FileConverter does not seem to be running. Respawning."
 			start_fileconverter
 		fi
