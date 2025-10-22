@@ -17,7 +17,7 @@ source "${buildpack_dir}/versions.sh"
 version="${ONLYOFFICE_DOCUMENTSERVER_VERSION:-"${ONLYOFFICE_DOCUMENTSERVER_DEFAULT_VERSION}"}"
 
 # GitHub API URL to retrieve the release corresponding to the version:
-release_url="https://api.github.com/repos/onlyoffice/DocumentServer/releases/tags/v${version}"
+release_url="https://api.github.com/repos/onlyoffice/DocumentServer/releases/tags/v${version}-ee"
 
 # Path to the .deb file stored in cache (it may or may not exist):
 archive="${cache_dir}/onlyoffice-documentserver-${version}.deb"
