@@ -6,8 +6,6 @@ start_docservice() {
 }
 
 ensure_docservice() {
-	start_docservice
-
 	while true; do
 		sleep 30s
 		if ! pgrep -f '/app/server/DocService/docservice' >/dev/null; then
