@@ -309,7 +309,7 @@
 	"services": {
 		"CoAuthoring": {
 			"server": {
-				"port": 8888,
+				"port": 8000,
 				"workerpercpu": 1,
 				"mode": "development",
 				"limits_tempfile_upload": 104857600,
