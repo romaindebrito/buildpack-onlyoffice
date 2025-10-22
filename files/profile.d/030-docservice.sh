@@ -8,14 +8,12 @@ start_docservice() {
 ensure_docservice() {
 	start_docservice
 
-	while true
-	do
+	while true; do
 		sleep 15s
-		pidof "docservice" > /dev/null \
-			|| {
-				echo "DocService does not seem to be running. Respawning." >&2
-				start_docservice
-			}
+		if ! pgrep -f '/app/server/DocService/docservice' >/dev/null; then
+			echo "DocService does not seem to be running. Respawning."
+			start_docservice
+		fi
 	done &
 }
 
