@@ -1,8 +1,46 @@
 #!/usr/bin/env bash
 
-cat << EOF
+# Check if ONLYOFFICE_MODE is set
+if [ -z "$ONLYOFFICE_MODE" ]; then
+  echo "[ERROR] The ONLYOFFICE_MODE environment variable is not set."
+  echo "Possible values: docservice, fileconverter, proxy"
+  exit 1
+fi
+
+echo "Current mode: $ONLYOFFICE_MODE"
+
+# ===============================
+# Actions based on ONLYOFFICE_MODE
+# ===============================
+
+case "$ONLYOFFICE_MODE" in
+  docservice)
+    cat << EOF
 ---
 default_process_types:
   web: /app/server/DocService/docservice & bin/run
-  worker: /app/server/FileConverter/converter
 EOF
+    ;;
+  
+  fileconverter)
+    cat << EOF
+---
+default_process_types:
+  web: /app/server/FileConverter/converter & bin/run
+EOF
+    ;;
+  
+  proxy)
+    cat << EOF
+---
+default_process_types:
+  web: /app/server/Proxy/proxy & bin/run
+EOF
+    ;;
+  
+  *)
+    echo "[ERROR] Unknown value for ONLYOFFICE_MODE: '$ONLYOFFICE_MODE'"
+    echo "Valid values: docservice | fileconverter | proxy"
+    exit 1
+    ;;
+esac
