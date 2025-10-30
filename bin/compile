@@ -4,6 +4,7 @@ export DEBUG="yes"
 
 # shellcheck disable=SC1091
 source "$( cd -P "$( dirname "${0}" )" && pwd )/../cmnlib.sh"
+source "$( cd -P "$( dirname "${0}" )" && pwd )/../lib/apt"
 
 cmn::main::start "${0}" "${1}" "${2}" "${3}"
 
@@ -38,6 +39,9 @@ custom_config_file="${build_dir}/production.json"
 # Path to the configuration directory:
 config_dir="${build_dir}/config"
 
+# shellcheck disable=SC1091
+source "${buildpack_dir}/versions.sh"
+
 # -----------------------------------------------------------------------------
 
 cmn::step::start "Installing prerequisites"
@@ -66,12 +70,12 @@ cmn::step::finish
 
 cmn::step::start "Installing OnlyOffice DocumentServer ${version}"
 
-download_url="$( jq --raw-output --null-input \
-					--argjson data "${tag_info}" '$data.browser_download_url' )"
+#download_url="$( jq --raw-output --null-input \
+#					--argjson data "${tag_info}" '$data.browser_download_url' )"
 
-digest="$( jq --raw-output --null-input \
-				--argjson data "${tag_info}" '$data.digest' \
-					| cut -d':' -f2 )"
+#digest="$( jq --raw-output --null-input \
+#				--argjson data "${tag_info}" '$data.digest' \
+#					| cut -d':' -f2 )"
 
 if [ ! -f "${archive}" ]; then
 
@@ -81,6 +85,8 @@ if [ ! -f "${archive}" ]; then
 	rm --recursive --force "${cache_dir}"/*.deb
 	rm --recursive --force "${cache_dir}"/*.sha256
 	cmn::task::finish
+
+	download_url="https://download.onlyoffice.com/repo/debian/pool/main/o/onlyoffice-documentserver-ee/onlyoffice-documentserver-ee_9.1.0_amd64.deb"
 
 	# Download appropriate version:
 	cmn::task::start "Downloading archive"
@@ -94,19 +100,19 @@ else
 	cmn::output::info "Found file in cache."
 fi
 
-cmn::task::start "Checking archive validity"
-echo "${digest}" > "${checksum_file}"
+# cmn::task::start "Checking archive validity"
+# echo "${digest}" > "${checksum_file}"
 
-if ! cmn::file::check_checksum "${archive}" "${checksum_file}"; then
-	cmn::task::fail
-	cmn::output::err <<- EOM
-		Checksums do not match!
-		'${archive}' has been deleted, since it's most likely corrupt.
-		Please trigger another deployment to retry.
-	EOM
-	exit 11
-fi
-cmn::task::finish
+# if ! cmn::file::check_checksum "${archive}" "${checksum_file}"; then
+# 	cmn::task::fail
+# 	cmn::output::err <<- EOM
+# 		Checksums do not match!
+# 		'${archive}' has been deleted, since it's most likely corrupt.
+# 		Please trigger another deployment to retry.
+# 	EOM
+# 	exit 11
+# fi
+# cmn::task::finish
 
 cmn::task::start "Extracting"
 if ! dpkg-deb --extract "${archive}" "${onlyoffice_dir}" 2>/dev/null; then

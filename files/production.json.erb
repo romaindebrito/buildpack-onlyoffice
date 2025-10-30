@@ -3,11 +3,17 @@
     "filePath": "/app/config/log4js/production.json"
   },
   "storage": {
-    "fs": {
-      "folderPath": "/app/cache",
-      "secretString": ""
-    },
-    "endpoint": ""
+    "name": "storage-s3",
+    "endpoint": "<%= ENV['OO_S3_ENDPOINT'] %>",
+    "region": "<%= ENV['OO_S3_REGION'] %>",
+    "bucketName": "<%= ENV['OO_S3_BUCKET_NAME'] %>",
+    "storageFolderName": "onlyoffice",
+    "usePathStyle": false,
+    "accessKeyId": "<%= ENV['OO_S3_ACCESS_KEY_ID'] %>",
+    "secretAccessKey": "<%= ENV['OO_S3_SECRET_ACCESS_KEY'] %>",
+    "sslEnabled": false,
+    "externalHost": "",
+    "useDirectStorageUrls": false
   },
   "aiSettings": {
     "pluginDir" : "/app/server/info/ai"
@@ -146,14 +152,14 @@
   "license": {
     "license_file": "/app/data/license.lic",
     "warning_limit_percents": 70,
-    "packageType": 0
+    "packageType": 1
   },
   "FileConverter": {
     "converter": {
       "fontDir": "/app/fonts",
       "presentationThemesDir": "/app/sdkjs/slide/themes",
       "x2tPath": "/app/server/FileConverter/bin/x2t",
-      "docbuilderPath": "/app/server/FileConverter/bin/docbuilder"
+      "docbuilderPath": "/app/server/FileConverter/bin/docbuilder",
     }
   },
   "SpellChecker": {
