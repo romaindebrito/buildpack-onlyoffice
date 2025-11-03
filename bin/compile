@@ -86,7 +86,7 @@ if [ ! -f "${archive}" ]; then
 	rm --recursive --force "${cache_dir}"/*.sha256
 	cmn::task::finish
 
-	download_url="https://download.onlyoffice.com/repo/debian/pool/main/o/onlyoffice-documentserver-ee/onlyoffice-documentserver-ee_9.1.0_amd64.deb"
+	download_url="https://download.onlyoffice.com/repo/debian/pool/main/o/onlyoffice-documentserver-de/onlyoffice-documentserver-de_9.1.0_amd64.deb"
 
 	# Download appropriate version:
 	cmn::task::start "Downloading archive"
