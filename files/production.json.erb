@@ -34,8 +34,8 @@
           "allowPrivateIPAddress": true,
           "allowMetaIPAddress": false
         },
-        "limits_tempfile_upload": 104857600,
-        "limits_image_size": 26214400,
+        "limits_tempfile_upload": 524288000,
+        "limits_image_size": 104857600,
         "limits_image_download_timeout": {
           "connectionAndInactivity": "2m",
           "wholeCycle": "2m"
@@ -159,12 +159,7 @@
       "fontDir": "/app/fonts",
       "presentationThemesDir": "/app/sdkjs/slide/themes",
       "x2tPath": "/app/server/FileConverter/bin/x2t",
-      "docbuilderPath": "/app/server/FileConverter/bin/docbuilder",
-      "spawnOptions": {
-        "env": {
-          "X2T_MEMORY_LIMIT": "2GB"
-        }
-      }
+      "docbuilderPath": "/app/server/FileConverter/bin/docbuilder"
     }
   },
   "SpellChecker": {
