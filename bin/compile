@@ -178,19 +178,19 @@ fi
 
 cmn::task::finish
 
-#cmn::task::start "Generating Themes"
+cmn::task::start "Generating Themes"
 
-#if ! "${build_dir}/server/tools/allthemesgen" \
-#		--src="${build_dir}/sdkjs/slide/themes"\
-#		--converter-dir="${build_dir}/server/FileConverter/bin"\
-#		--output="${build_dir}/sdkjs/common/Images"
-#then
-#	cmn::task::fail
-#	cmn::step::fail
-#	exit 21
-#fi
+if ! "${build_dir}/server/tools/allthemesgen" \
+		--src="sdkjs/slide/themes"\
+		--converter-dir="server/FileConverter/bin"\
+		--output="sdkjs/common/Images"
+then
+	cmn::task::fail
+	cmn::step::fail
+	exit 21
+fi
 
-#cmn::task::finish
+cmn::task::finish
 
 
 #cmn::task::start "Updating Fonts Paths"
