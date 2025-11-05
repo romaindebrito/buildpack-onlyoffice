@@ -164,6 +164,9 @@ cmn::step::start "Generating Files"
 # pointing to $build_dir.
 # This allows us to reference /app, even if it doesn't really exist yet.
 
+cmn::output::debug <<< "$( ls -al / )"
+cmn::output::debug <<< "$( test -d /app )"
+
 ln --symbolic --force --no-dereference "${build_dir}" /app
 
 cmn::output::debug <<< "$( ls -al / )"
