@@ -170,6 +170,7 @@ cmn::output::debug <<< "$( ls -al / )"
 cmn::output::debug "Listing /app:"
 cmn::output::debug <<< "$( ls -al /app )"
 
+mv /app /app_orig
 ln --symbolic --force --no-dereference "${build_dir}" /app
 
 cmn::output::debug "Listing /:"
@@ -237,6 +238,7 @@ cmn::task::finish
 
 # Remove /app link:
 rm --force /app
+mv /app_orig /app
 
 cmn::step::finish
 
