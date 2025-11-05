@@ -166,7 +166,9 @@ cmn::step::start "Generating Files"
 
 ln --symbolic --force --no-dereference "${build_dir}" /app
 
+cmn::output::debug <<< "$( ls -al / )"
 cmn::output::debug <<< "$( ls -al /app )"
+cmn::output::debug <<< "$( ls -al "${build_dir}" )"
 
 LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/app/server/FileConverter/bin"
 export LD_LIBRARY_PATH
