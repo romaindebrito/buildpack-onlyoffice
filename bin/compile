@@ -193,7 +193,7 @@ fi
 cmn::task::finish
 
 
-# cmn::task::start "Updating Fonts Paths"
+cmn::task::start "Updating Fonts Paths"
 
 # Font paths are generated during build, so that all paths are prefixed with
 # `/build/<UUID>`.
@@ -210,10 +210,6 @@ for f in "${font_files[@]}"; do
 done
 
 #cmn::task::finish
-
-# Remove /app link:
-rm --force /app
-mv /app_orig /app
 
 cmn::step::finish
 
