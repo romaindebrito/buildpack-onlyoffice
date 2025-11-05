@@ -562,14 +562,14 @@
 				{
 				"type": "docx;dotx;docm;dotm",
 				"zip": {
-					"uncompressed": "50MB",
+					"uncompressed": "100MB",
 					"template": "*.xml"
 				}
 				},
 				{
 				"type": "xlsx;xltx;xlsm;xltm",
 				"zip": {
-					"uncompressed": "300MB",
+					"uncompressed": "500MB",
 					"template": "*.xml"
 				}
 				},
