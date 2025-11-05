@@ -164,13 +164,21 @@ cmn::step::start "Generating Files"
 # pointing to $build_dir.
 # This allows us to reference /app, even if it doesn't really exist yet.
 
+cmn::output::debug "Listing /:"
 cmn::output::debug <<< "$( ls -al / )"
-cmn::output::debug <<< "$( test -d /app )"
+
+cmn::output::debug "Listing /app:"
+cmn::output::debug <<< "$( ls -al /app )"
 
 ln --symbolic --force --no-dereference "${build_dir}" /app
 
+cmn::output::debug "Listing /:"
 cmn::output::debug <<< "$( ls -al / )"
+
+cmn::output::debug "Listing /app:"
 cmn::output::debug <<< "$( ls -al /app )"
+
+cmn::output::debug "Listing build_dir (${build_dir}):"
 cmn::output::debug <<< "$( ls -al "${build_dir}" )"
 
 LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/app/server/FileConverter/bin"
