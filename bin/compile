@@ -165,12 +165,12 @@ export LD_LIBRARY_PATH
 cmn::task::start "Generating Fonts"
 
 if ! "${build_dir}/server/tools/allfontsgen" \
-		--input="/app/core-fonts" \
-		--allfonts-web="/app/sdkjs/common/AllFonts.js" \
-		--allfonts="/app/server/FileConverter/bin/AllFonts.js" \
-		--images="/app/sdkjs/common/Images" \
-		--selection="/app/server/FileConverter/bin/font_selection.bin" \
-		--output-web="/app/fonts" \
+		--input="${build_dir}/core-fonts" \
+		--allfonts-web="${build_dir}/sdkjs/common/AllFonts.js" \
+		--allfonts="${build_dir}/server/FileConverter/bin/AllFonts.js" \
+		--images="${build_dir}/sdkjs/common/Images" \
+		--selection="${build_dir}/server/FileConverter/bin/font_selection.bin" \
+		--output-web="${build_dir}/fonts" \
 		--use-system="true"
 then
 	cmn::task::fail
@@ -183,9 +183,9 @@ cmn::task::finish
 cmn::task::start "Generating Themes"
 
 if ! "${build_dir}/server/tools/allthemesgen" \
-		--src="/app/sdkjs/slide/themes"\
-		--converter-dir="/app/server/FileConverter/bin"\
-		--output="/app/sdkjs/common/Images"
+		--src="${build_dir}/sdkjs/slide/themes"\
+		--converter-dir="${build_dir}/server/FileConverter/bin"\
+		--output="${build_dir}/sdkjs/common/Images"
 then
 	cmn::task::fail
 	cmn::step::fail
@@ -195,23 +195,23 @@ fi
 cmn::task::finish
 
 
-#cmn::task::start "Updating Fonts Paths"
+cmn::task::start "Updating Fonts Paths"
 
 # Font paths are generated during build, so that all paths are prefixed with
 # `/build/<UUID>`.
 # At runtime, this path doesn't exist and must be replaced with `/app`:
 
-#font_files=(
-#	${HOME}/server/FileConverter/bin/AllFonts.js
-#	${HOME}/server/FileConverter/bin/font_selection.bin
-#	${HOME}/sdkjs/common/AllFonts.js
-#)
+font_files=(
+	${HOME}/server/FileConverter/bin/AllFonts.js
+	${HOME}/server/FileConverter/bin/font_selection.bin
+	${HOME}/sdkjs/common/AllFonts.js
+)
 
-#for f in "${font_files[@]}"; do
-#	sed -i -E 's/\/build\/[a-z0-9-]{36}/\/app/g' "${f}"
-#done
+for f in "${font_files[@]}"; do
+	sed -i -E 's/\/build\/[a-z0-9-]{36}/\/app/g' "${f}"
+done
 
-#cmn::task::finish
+cmn::task::finish
 
 cmn::step::finish
 
