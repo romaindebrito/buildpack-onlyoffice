@@ -562,21 +562,21 @@
 				{
 				"type": "docx;dotx;docm;dotm",
 				"zip": {
-					"uncompressed": "100MB",
+					"uncompressed": "600MB",
 					"template": "*.xml"
 				}
 				},
 				{
 				"type": "xlsx;xltx;xlsm;xltm",
 				"zip": {
-					"uncompressed": "500MB",
+					"uncompressed": "800MB",
 					"template": "*.xml"
 				}
 				},
 				{
 				"type": "pptx;ppsx;potx;pptm;ppsm;potm",
 				"zip": {
-					"uncompressed": "50MB",
+					"uncompressed": "3000MB",
 					"template": "*.xml"
 				}
 				}
