@@ -576,7 +576,7 @@
 				{
 				"type": "pptx;ppsx;potx;pptm;ppsm;potm",
 				"zip": {
-					"uncompressed": "3000MB",
+					"uncompressed": "300MB",
 					"template": "*.xml"
 				}
 				}
